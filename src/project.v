@@ -17,11 +17,44 @@ module tt_um_example (
 );
 
   // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
+    dino_rom rom (clk, ~rst_n, ui_in[5:0], uo_out[0]);
   assign uio_out = 0;
   assign uio_oe  = 0;
 
   // List all unused inputs to prevent warnings
   wire _unused = &{ena, clk, rst_n, 1'b0};
+
+endmodule
+
+module dino_rom (
+  input  wire       clk,      // clock
+  input  wire       rst, 
+  input wire [5:0] i_rom_counter,
+  output reg  o_sprite_color
+);
+
+reg [2:0] rom_x;
+reg [2:0] rom_y;
+always @(*) begin
+  {rom_y, rom_x} = i_rom_counter;
+end
+reg [7:0] icon [7:0];
+
+always @(posedge clk or posedge rst) begin
+  if (rst) begin
+    icon[0] <= 8'b01110000;
+    icon[1] <= 8'b11110000;
+    icon[2] <= 8'b00110000;
+    icon[3] <= 8'b00111001;
+    icon[4] <= 8'b00111111;
+    icon[5] <= 8'b00011110;
+    icon[6] <= 8'b00010100;
+    icon[7] <= 8'b00010100;
+  end
+end
+
+always @(*) begin
+  o_sprite_color = icon[rom_y][rom_x];
+end
 
 endmodule
