@@ -34,8 +34,8 @@ async def test_project(dut):
 
     # The following assersion is just an example of how to check the output values.
     # Change it to match the actual expected output of your module:
-    for i in range(0, 7) :
-        for j in range(0, 7) :
+    for i in range(0, 8) :
+        for j in range(0, 8) :
             dut.ui_in.value = (i << 3 | j)
             await ClockCycles(dut.clk, 1)
             dut._log.info(f"ui_in: {dut.ui_in.value}")
